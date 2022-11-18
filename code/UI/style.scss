@@ -1,0 +1,34 @@
+.mag-holder {
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    width: 100%;
+
+    bottom: 10%;
+
+    .mag {
+        width: 96px;
+        height: 96px;
+
+        background-image: url(/ui/revolver_mag.png);
+        background-size: 100%;
+    } 
+}
+
+.crosshair-holder {
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    .crosshair {
+        width: 16px;
+        height: 16px;
+
+        background-image: url(/ui/crosshair.png);
+        background-size: 100%;
+    }
+}
