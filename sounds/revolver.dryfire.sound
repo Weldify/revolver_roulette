@@ -6,14 +6,14 @@
 		Volume = 1
 		VolumeRandom = 0
 		Pitch = 1
-		PitchRandom = 0.02
-		Decibels = 160
+		PitchRandom = 0.05
+		Decibels = 140
 		Sounds = 
 		[
-			resource:"sounds/revolver.fire.vsnd",
+			resource:"sounds/revolver.dryfire.vsnd",
 		]
 		SelectionMode = "Random"
-		MaximumDistance = 5841.2856
-		MinimumDistance = 292.0643
+		MaximumDistance = 4479.734
+		MinimumDistance = 223.9867
 	}
 }

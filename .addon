@@ -32,6 +32,36 @@
         "ConVarName": "",
         "DisplayName": "New Setting..."
       }
-    ]
+    ],
+    "Collision": {
+      "Defaults": {
+        "solid": "Collide",
+        "trigger": "Trigger",
+        "player": "Unset",
+        "debris": "Unset"
+      },
+      "Pairs": [
+        {
+          "a": "solid",
+          "b": "solid",
+          "r": "Collide"
+        },
+        {
+          "a": "player",
+          "b": "debris",
+          "r": "Ignore"
+        },
+        {
+          "a": "playerclip",
+          "b": "solid",
+          "r": "Collide"
+        },
+        {
+          "a": "debris",
+          "b": "debris",
+          "r": "Collide"
+        }
+      ]
+    }
   }
 }

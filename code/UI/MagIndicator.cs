@@ -3,6 +3,7 @@ namespace RevolverRoulette.UI;
 public partial class MagIndicator
 {
     public static MagIndicator Current;
+    public Panel Mag { get; set; }
 
     float rotation = 0f;
     float impulse = 0f;

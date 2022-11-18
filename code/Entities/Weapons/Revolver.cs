@@ -3,6 +3,7 @@ namespace RevolverRoulette;
 internal partial class Revolver : BaseWeapon
 {
 	public static readonly Model WorldModel = Model.Load( "weapons/rust_pistol/rust_pistol.vmdl" );
+	public static readonly Model ViewModel = Model.Load("weapons/rust_pistol/v_rust_pistol.vmdl");
 
 	public override bool CanReload() => false;
 	public override bool CanSecondaryAttack() => false;
@@ -27,13 +28,13 @@ internal partial class Revolver : BaseWeapon
 		Host.AssertClient();
 
 		Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
-
-		ViewModelEntity?.SetAnimParameter( "fire", true );
 	}
 
 	private void DryFire()
 	{
+		PlaySound("revolver.dryfire");
 		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
+		ViewModelEntity?.SetAnimParameter( "fire", true );
 	}
 
 	public override void AttackPrimary()
@@ -64,8 +65,10 @@ internal partial class Revolver : BaseWeapon
 		}
 
 		PlaySound("revolver.fire");
-		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
 
+		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
+		ViewModelEntity?.SetAnimParameter( "fire", true );
+		
 		ShootEffects();
 	}
 
@@ -74,5 +77,20 @@ internal partial class Revolver : BaseWeapon
 		anim.SetAnimParameter( "holdtype", (int)CitizenAnimationHelper.HoldTypes.Pistol );
 		anim.SetAnimParameter( "aim_body_weight", 1.0f );
 		anim.SetAnimParameter( "holdtype_handedness", (int)CitizenAnimationHelper.Hand.Right );
+	}
+
+	public override void CreateViewModel()
+	{
+		Host.AssertClient();
+
+		ViewModelEntity = new ViewModel
+		{
+			Position= Position,
+			Owner = Owner,
+			EnableViewmodelRendering = true,
+			Model = ViewModel,
+		};
+
+		ViewModelEntity.SetAnimParameter( "deploy", true );
 	}
 }

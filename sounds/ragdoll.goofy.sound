@@ -6,11 +6,12 @@
 		Volume = 1
 		VolumeRandom = 0
 		Pitch = 1
-		PitchRandom = 0.02
+		PitchRandom = 0
 		Decibels = 160
 		Sounds = 
 		[
-			resource:"sounds/revolver.fire.vsnd",
+			resource:"sounds/ragdoll.goofy.carhorn.vsnd",
+			resource:"sounds/ragdoll.goofy.skull.vsnd",
 		]
 		SelectionMode = "Random"
 		MaximumDistance = 5841.2856

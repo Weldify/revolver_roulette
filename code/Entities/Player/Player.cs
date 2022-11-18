@@ -2,6 +2,7 @@ namespace RevolverRoulette;
 
 internal partial class Player : Sandbox.Player
 {
+	private DamageInfo lastDamage;
 	private TimeSince timeSinceDied = 0f;
 
 	public Player()
@@ -27,17 +28,36 @@ internal partial class Player : Sandbox.Player
 
 		Inventory.Add( new Revolver(), true );
 
+		UpdateClothes();
+		Dress();
+
 		EnableDrawing = true;
 		EnableAllCollisions = true;
 
 		base.Respawn();
 	}
 
+	public override void TakeDamage( DamageInfo info )
+	{
+		if ( LifeState == LifeState.Dead )
+			return;
+
+		lastDamage = info;
+		base.TakeDamage( info );
+	}
+
 	public override void OnKilled()
 	{
 		timeSinceDied = 0f;
 
+		// So we don't hog the bullet while we're dead
+		// or even worse, duplicate it when we spawn in!
+		TakeBullet();
+
 		Inventory.DeleteContents();
+
+		BecomeRagdollOnClient( To.Everyone, lastDamage.Force, lastDamage.BoneIndex );
+		CameraMode = new SpectateRagdollCamera();
 
 		EnableDrawing = false;
 		EnableAllCollisions = false;
