@@ -14,7 +14,11 @@ internal partial class Player : Sandbox.Player
 	{
 		base.Spawn();
 
-		SetModel( "models/citizen/citizen.vmdl" );
+		// Freshly spawned pawns are Alive,
+		// which causes the game to think they're participating in the match.
+		LifeState = LifeState.Dead;
+
+		SetModel( "models/player/hazmatsuit/hazmatsuit.vmdl" );
 
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
@@ -26,10 +30,13 @@ internal partial class Player : Sandbox.Player
 		Animator = new StandardPlayerAnimator();
 		CameraMode = new FirstPersonCamera();
 
+		Inventory.DeleteContents();
 		Inventory.Add( new Revolver(), true );
 
-		UpdateClothes();
-		Dress();
+		TakeBullet();
+
+		//UpdateClothes();
+		//Dress();
 
 		EnableDrawing = true;
 		EnableAllCollisions = true;
@@ -69,29 +76,10 @@ internal partial class Player : Sandbox.Player
 	{
 		if ( LifeState != LifeState.Alive ) return;
 
-		if ( Input.Pressed( InputButton.View ) )
-		{
-			CameraMode = CameraMode switch
-			{
-				FirstPersonCamera => new ThirdPersonCamera(),
-				ThirdPersonCamera or _ => new FirstPersonCamera(),
-			};
-		}
-
 		TickPlayerUse();
 		SimulateActiveChild( cl, ActiveChild );
 
 		var controller = GetActiveController();
 		controller?.Simulate( cl, this, GetActiveAnimator() );
-	}
-
-	[Event.Tick.Server]
-	public void OnTick()
-	{
-		if ( LifeState == LifeState.Dead && timeSinceDied > 3f )
-		{
-			Respawn();
-			return;
-		}
 	}
 }

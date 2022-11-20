@@ -10,6 +10,8 @@ namespace RevolverRoulette;
 
 internal partial class Game : Sandbox.Game
 {
+	new public static Game Current;
+
 	private Player prevBulletOwner;
 
 	private Hud hud;
@@ -28,8 +30,6 @@ internal partial class Game : Sandbox.Game
 
 		var plr = new Player();
 		cl.Pawn = plr;
-
-		plr.Respawn();
 	}
 
 	private Player GetNextBulletOwner( IEnumerable<Player> players )
@@ -45,8 +45,7 @@ internal partial class Game : Sandbox.Game
 		return set.ElementAt(pos);
 	}
 
-	[Event.Tick.Server]
-	public void OnTick()
+	public void DistributeBullet()
 	{
 		var eligiblePlayers = Entity.All.OfType<Player>().Where(
 			p => p.IsValid() && p.LifeState == LifeState.Alive
@@ -69,6 +68,13 @@ internal partial class Game : Sandbox.Game
 		prevBulletOwner = plr;
 
 		BulletRerollNotifyClient( To.Everyone );
+	}
+
+	[Event.Tick.Server]
+	public void OnTick()
+	{
+		TickState();
+		DistributeBullet();
 	}
 
 	[ClientRpc]

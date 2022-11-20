@@ -1,25 +1,25 @@
 {
   "Title": "Revolver Roulette",
   "Type": "game",
-  "Org": "local",
-  "Ident": "revolver_roulette",
+  "Org": "tgm",
+  "Ident": "revroulette",
   "Tags": "",
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
   "ResourcePaths": [
-    "ui"
+    "/ui/*"
   ],
   "HasCode": true,
   "CodePath": "/code/",
   "RootNamespace": null,
   "Metadata": {
     "MaxPlayers": 6,
-    "MinPlayers": 1,
+    "MinPlayers": 2,
     "GameNetworkType": "Multiplayer",
     "MapSelect": "Unrestricted",
     "MapList": [
-      "facepunch.flatgrass"
+      "tgm.rr_town"
     ],
     "RankType": "None",
     "PerMapRanking": false,
@@ -62,6 +62,9 @@
           "r": "Collide"
         }
       ]
+    },
+    "ControlModes": {
+      "Keyboard": true
     }
   }
 }

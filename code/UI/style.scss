@@ -1,19 +1,36 @@
-.mag-holder {
-    justify-content: center;
+.bg-image {
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.hud-holder {
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
 
     position: absolute;
-    width: 100%;
+    bottom: 0px;
 
-    bottom: 10%;
+    width: 100%;
 
     .mag {
         width: 96px;
         height: 96px;
 
         background-image: url(/ui/revolver_mag.png);
-        background-size: 100%;
-    } 
+
+        margin-bottom: 8px;
+    }
+
+    .round-state {
+        margin-bottom: 128px;
+
+        color: white;
+        font-size: 32px;
+        font-family: Georgia;
+
+        text-shadow: 0px 0px 4px 0px white;
+    }
 }
 
 .crosshair-holder {
@@ -29,6 +46,5 @@
         height: 16px;
 
         background-image: url(/ui/crosshair.png);
-        background-size: 100%;
     }
 }
