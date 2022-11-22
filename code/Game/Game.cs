@@ -39,10 +39,10 @@ internal partial class Game : Sandbox.Game
 		var set = players.ToHashSet();
 		set.Remove( prevBulletOwner );
 
-		var pos = Rand.Int(set.Count);
-		if (pos >= set.Count) return null;
+		var pos = Rand.Int( set.Count );
+		if ( pos >= set.Count ) return null;
 
-		return set.ElementAt(pos);
+		return set.ElementAt( pos );
 	}
 
 	public void DistributeBullet()
