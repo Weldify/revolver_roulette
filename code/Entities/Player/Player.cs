@@ -3,7 +3,6 @@ namespace RevolverRoulette;
 internal partial class Player : Sandbox.Player
 {
 	private DamageInfo lastDamage;
-	private TimeSince timeSinceDied = 0f;
 
 	public Player()
 	{
@@ -16,9 +15,9 @@ internal partial class Player : Sandbox.Player
 
 		// Freshly spawned pawns are Alive,
 		// which causes the game to think they're participating in the match.
-		LifeState = LifeState.Dead;
+		LifeState = LifeState.Respawnable;
 
-		SetModel( "models/player/hazmatsuit/hazmatsuit.vmdl" );
+		SetModel( "models/citizen/citizen.vmdl" );
 
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
@@ -55,8 +54,6 @@ internal partial class Player : Sandbox.Player
 
 	public override void OnKilled()
 	{
-		timeSinceDied = 0f;
-
 		// So we don't hog the bullet while we're dead
 		// or even worse, duplicate it when we spawn in!
 		TakeBullet();
@@ -81,5 +78,11 @@ internal partial class Player : Sandbox.Player
 
 		var controller = GetActiveController();
 		controller?.Simulate( cl, this, GetActiveAnimator() );
+	}
+
+	[Event.Tick.Client]
+	public void OnClientTick()
+	{
+		SwapRagdollCamera();
 	}
 }

@@ -2,6 +2,8 @@ namespace RevolverRoulette;
 
 internal partial class Player
 {
+	private TimeSince timeSinceRagdolled = 0f;
+
 	[ClientRpc]
 	private void BecomeRagdollOnClient( Vector3 force, int forceBone )
 	{
@@ -53,5 +55,15 @@ internal partial class Player
 		corpse.PlaySound( "ragdoll.goofy" );
 		
 		Corpse = corpse;
+
+		timeSinceRagdolled = 0f;
+	}
+
+	private void SwapRagdollCamera()
+	{
+		if (LifeState != LifeState.Dead || timeSinceRagdolled < 3f || CameraMode is FreeFlyCamera) return;
+
+		CameraMode = new FreeFlyCamera();
+		Log.Info("Swaperd");
 	}
 }
