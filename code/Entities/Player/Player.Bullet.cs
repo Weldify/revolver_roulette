@@ -1,6 +1,6 @@
 namespace RevolverRoulette;
 
-internal partial class Player
+public partial class Player
 {
 	[Net]
 	public bool HasBullet { get; set; } = false;

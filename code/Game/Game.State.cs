@@ -14,11 +14,11 @@ internal partial class Game
 
 	private TimeUntil stateTimer;
 
-    private void RespawnPlayers()
-    {
-        foreach (var plr in Entity.All.OfType<Player>().ToList())
-            plr.Respawn();
-    }
+	private void RespawnPlayers()
+	{
+		foreach ( var plr in Entity.All.OfType<Player>().ToList() )
+			plr.Respawn();
+	}
 
 	public void TickState()
 	{
@@ -40,7 +40,7 @@ internal partial class Game
 
 					if ( players.Count() >= 2 )
 					{
-                        RespawnPlayers();
+						RespawnPlayers();
 						GameState = GameState.Ongoing;
 						continue;
 					}
@@ -54,7 +54,9 @@ internal partial class Game
 					if ( living.Count() <= 1 )
 					{
 						GameState = GameState.Intermission;
-                        stateTimer = 5f;
+						stateTimer = 5f;
+
+						Game.ClientTellWinner( To.Everyone, living.First() );
 
 						continue;
 					}

@@ -82,4 +82,10 @@ internal partial class Game : Sandbox.Game
 	{
 		MagIndicator.Current?.Spin();
 	}
+
+	[ClientRpc]
+	public static void ClientTellWinner( Player plr )
+	{
+		WinnerPrompt.Current?.PlayerWon( plr );
+	}
 }

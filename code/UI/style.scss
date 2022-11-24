@@ -1,3 +1,11 @@
+label {
+    color: white;
+    font-size: 32px;
+    font-family: Georgia;
+
+    text-shadow: 0px 0px 4px 0px white;
+}
+
 .bg-image {
     background-repeat: no-repeat;
     background-size: cover;
@@ -24,12 +32,6 @@
 
     .round-state {
         margin-bottom: 128px;
-
-        color: white;
-        font-size: 32px;
-        font-family: Georgia;
-
-        text-shadow: 0px 0px 4px 0px white;
     }
 }
 
@@ -46,5 +48,27 @@
         height: 16px;
 
         background-image: url(/ui/crosshair.png);
+    }
+}
+
+.winner-prompt {
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    width: 100%;
+
+    top: 64px;
+
+    .winner-card {
+        opacity: 0;
+        
+        transition: opacity 0.2s ease-in;
+
+        &.visible {
+            opacity: 1;
+
+            transition: opacity 0.2s ease-in;
+        }
     }
 }

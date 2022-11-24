@@ -1,6 +1,6 @@
 namespace RevolverRoulette;
 
-internal partial class Player : Sandbox.Player
+public partial class Player : Sandbox.Player
 {
 	private DamageInfo lastDamage;
 

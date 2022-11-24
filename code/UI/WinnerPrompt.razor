@@ -1,0 +1,12 @@
+@namespace RevolverRoulette.UI
+@inherits Panel
+
+@{
+    var winnerText = Winner.IsValid() ? $"{Winner.Client.Name} has won!" : "Nobody won!";
+}
+
+<root class="winner-prompt">
+    <label @ref=WinnerLabel class="winner-card">
+        @winnerText
+    </label>
+</root>
