@@ -1,15 +1,15 @@
 namespace RevolverRoulette;
 
-internal enum GameState
+public enum GameState
 {
 	WaitingForPlayers,
 	Ongoing,
 	Intermission,
 }
 
-internal partial class Game
+public partial class Game
 {
-	[Net]
+	[Net, Change]
 	public GameState GameState { get; set; } = GameState.WaitingForPlayers;
 
 	private TimeUntil stateTimer;
@@ -66,5 +66,10 @@ internal partial class Game
 
 			break;
 		}
+	}
+
+	public void OnGameStateChanged(GameState _, GameState state)
+	{
+		GameStateIndicator.Current.StateChanged();
 	}
 }

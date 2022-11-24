@@ -12,7 +12,7 @@ public partial class Player : Sandbox.Player
 	public override void Spawn()
 	{
 		base.Spawn();
-
+	
 		// Freshly spawned pawns are Alive,
 		// which causes the game to think they're participating in the match.
 		LifeState = LifeState.Respawnable;

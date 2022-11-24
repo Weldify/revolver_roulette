@@ -8,9 +8,9 @@ global using RevolverRoulette.UI;
 
 namespace RevolverRoulette;
 
-internal partial class Game : Sandbox.Game
+public partial class Game : Sandbox.Game
 {
-	new public static Game Current;
+	new public static Game Current { get; private set; }
 
 	private Player prevBulletOwner;
 
