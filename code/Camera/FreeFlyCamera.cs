@@ -2,12 +2,16 @@ namespace RevolverRoulette;
 
 internal class FreeFlyCamera : CameraMode
 {
+	public FreeFlyCamera(Vector3 pos)
+	{
+		Position = pos;
+	}
+
 	public override void Activated()
 	{
 		var pawn = Local.Pawn;
 		if ( pawn == null ) return;
 
-		Position = pawn.EyePosition;
 		Rotation = pawn.EyeRotation;
 	}
 

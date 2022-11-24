@@ -53,17 +53,17 @@ internal partial class Player
 		//? Currently the sound isn't the same for different clients.
 		//? Will fix once it's possible to influence which subsound is played.
 		corpse.PlaySound( "ragdoll.goofy" );
-		
+
 		Corpse = corpse;
 
 		timeSinceRagdolled = 0f;
 	}
 
-	private void SwapRagdollCamera()
+	[ClientRpc]
+	private void TryBeginSpectating( Vector3 pos, bool forced = false )
 	{
-		if (LifeState != LifeState.Dead || timeSinceRagdolled < 3f || CameraMode is FreeFlyCamera) return;
+		if ( !forced && (LifeState != LifeState.Dead || timeSinceRagdolled < 3f || CameraMode is FreeFlyCamera) ) return;
 
-		CameraMode = new FreeFlyCamera();
-		Log.Info("Swaperd");
+		CameraMode = new FreeFlyCamera( pos );
 	}
 }

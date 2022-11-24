@@ -21,6 +21,16 @@ internal partial class Player : Sandbox.Player
 
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
+
+		var activePlayers = All.OfType<Player>().Where(
+			p => p.LifeState == LifeState.Alive
+		);
+
+		var specPlayer = Rand.FromList( activePlayers.ToList() );
+		if ( specPlayer.IsValid() )
+		{
+			TryBeginSpectating( specPlayer.EyePosition, true );
+		}
 	}
 
 	public override void Respawn()
@@ -83,6 +93,6 @@ internal partial class Player : Sandbox.Player
 	[Event.Tick.Client]
 	public void OnClientTick()
 	{
-		SwapRagdollCamera();
+		TryBeginSpectating( EyePosition );
 	}
 }
