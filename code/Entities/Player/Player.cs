@@ -44,8 +44,8 @@ public partial class Player : Sandbox.Player
 
 		TakeBullet();
 
-		//UpdateClothes();
-		//Dress();
+		UpdateClothes();
+		Dress();
 
 		EnableDrawing = true;
 		EnableAllCollisions = true;

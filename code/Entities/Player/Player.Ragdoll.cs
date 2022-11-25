@@ -62,7 +62,7 @@ public partial class Player
 	[ClientRpc]
 	private void TryBeginSpectating( Vector3 pos, bool forced = false )
 	{
-		if ( !forced && (LifeState != LifeState.Dead || timeSinceRagdolled < 3f || CameraMode is FreeFlyCamera) ) return;
+		if ( forced || LifeState != LifeState.Dead || timeSinceRagdolled < 3f || CameraMode is FreeFlyCamera ) return;
 
 		CameraMode = new FreeFlyCamera( pos );
 	}
