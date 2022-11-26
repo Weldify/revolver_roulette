@@ -10,6 +10,8 @@ internal partial class ViewModel : BaseViewModel
 
 		// camSetup.ViewModelFieldOfView = camSetup.FieldOfView + (FieldOfView - 80);
 
+		camSetup.ViewModel.FieldOfView = 75f;
+
 		AddCameraEffects( ref camSetup );
 	}
 
@@ -25,6 +27,7 @@ internal partial class ViewModel : BaseViewModel
 		//
 		var speed = Owner.Velocity.Length.LerpInverse( 0, 400 );
 		var left = camSetup.Rotation.Left;
+		var fwd = camSetup.Rotation.Forward;
 		var up = camSetup.Rotation.Up;
 
 		if ( Owner.GroundEntity != null )
@@ -32,6 +35,7 @@ internal partial class ViewModel : BaseViewModel
 			walkBob += Time.Delta * 25.0f * speed;
 		}
 
+		Position += fwd * -20f;
 		Position += up * MathF.Sin( walkBob ) * speed * -1;
 		Position += left * MathF.Sin( walkBob * 0.5f ) * speed * -0.5f;
 	}
