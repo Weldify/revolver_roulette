@@ -12,16 +12,17 @@ public partial class Game : Sandbox.Game
 {
 	new public static Game Current { get; private set; }
 
-	private Player prevBulletOwner;
+	[Net, Change]
+	public Player BulletOwner { get; private set; }
 
-	private Hud hud;
+	private Player prevBulletOwner;
 
 	public Game()
 	{
 		Current = this;
 
 		if ( IsClient )
-			hud = new Hud();
+			_ = new Hud();
 	}
 
 	public override void ClientJoined( Client cl )
@@ -32,53 +33,30 @@ public partial class Game : Sandbox.Game
 		cl.Pawn = plr;
 	}
 
-	private Player GetNextBulletOwner( IEnumerable<Player> players )
+	public void RerollBullet()
 	{
-		Rand.SetSeed( Time.Tick );
-
-		var set = players.ToHashSet();
-		set.Remove( prevBulletOwner );
-
-		var pos = Rand.Int( set.Count );
-		if ( pos >= set.Count ) return null;
-
-		return set.ElementAt( pos );
+		prevBulletOwner = BulletOwner;
+		BulletOwner = null;
 	}
 
-	public void DistributeBullet()
+	public void EnsureBullet()
 	{
-		var eligiblePlayers = Entity.All.OfType<Player>().Where(
-			p => p.IsValid() && p.LifeState == LifeState.Alive
-		);
+		if ( BulletOwner.IsValid() || GameState == GameState.WaitingForPlayers ) return;
 
-		var noBullet = eligiblePlayers.All( p => !p.HasBullet );
-		if ( !noBullet ) return;
+		var eligible = All.OfType<Player>().Where( p => p != prevBulletOwner && p.LifeState == LifeState.Alive );
 
-		Player plr;
-
-		plr = eligiblePlayers.Count() switch
-		{
-			1 => eligiblePlayers.First(),
-			_ => GetNextBulletOwner( eligiblePlayers ),
-		};
-
-		if ( plr == null ) return;
-
-		plr.HasBullet = true;
-		prevBulletOwner = plr;
-
-		BulletRerollNotifyClient( To.Everyone );
+		Rand.SetSeed( Time.Tick );
+		BulletOwner = Rand.FromList( eligible.ToList() );
 	}
 
 	[Event.Tick.Server]
 	public void OnTick()
 	{
 		TickState();
-		DistributeBullet();
+		EnsureBullet();
 	}
 
-	[ClientRpc]
-	public static void BulletRerollNotifyClient()
+	public void OnBulletOwnerChanged( Player _, Player owner )
 	{
 		MagIndicator.Current?.Spin();
 	}

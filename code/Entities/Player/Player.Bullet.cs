@@ -2,14 +2,19 @@ namespace RevolverRoulette;
 
 public partial class Player
 {
-	[Net]
-	public bool HasBullet { get; set; } = false;
+	public bool HasBullet
+    {
+        get => Game.Current.BulletOwner == this;
+    }
 
 	public bool TakeBullet()
 	{
-		if ( !HasBullet ) return false;
-        HasBullet = false;
+		if ( HasBullet )
+		{
+			Game.Current.RerollBullet();
+			return true;
+		}
 
-        return true;
+		return false;
 	}
 }
