@@ -18,9 +18,7 @@
     "MinPlayers": 2,
     "GameNetworkType": "Multiplayer",
     "MapSelect": "Unrestricted",
-    "MapList": [
-      "tgm.rr_town"
-    ],
+    "MapList": [],
     "RankType": "None",
     "PerMapRanking": false,
     "LeaderboardType": "None",
