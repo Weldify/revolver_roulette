@@ -2,16 +2,17 @@ namespace RevolverRoulette;
 
 internal partial class Revolver : BaseWeapon
 {
-	public static readonly Model WorldModel = Model.Load( "weapons/rust_pistol/rust_pistol.vmdl" );
-	public static readonly Model ViewModel = Model.Load("weapons/rust_pistol/v_rust_pistol.vmdl");
+	public static readonly Model WorldModel = Model.Load( "models/revolver/revolver.vmdl" );
+	public static readonly Model ViewModel = Model.Load("models/revolver/v_revolver.vmdl");
 
 	public override bool CanReload() => false;
 	public override bool CanSecondaryAttack() => false;
 
-	public override void Spawn()
+	public override void Spawn() 
 	{
 		base.Spawn();
 
+		Log.Info("Sad");
 		Model = WorldModel;
 	}
 
@@ -89,8 +90,7 @@ internal partial class Revolver : BaseWeapon
 			Owner = Owner,
 			EnableViewmodelRendering = true,
 			Model = ViewModel,
+			
 		};
-
-		ViewModelEntity.SetAnimParameter( "deploy", true );
 	}
 }
