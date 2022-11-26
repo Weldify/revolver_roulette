@@ -17,6 +17,8 @@ public partial class Game : Sandbox.Game
 
 	private Player prevBulletOwner;
 
+	private TimeSince timeSinceBulletReroll;
+
 	public Game()
 	{
 		Current = this;
@@ -41,7 +43,16 @@ public partial class Game : Sandbox.Game
 
 	public void EnsureBullet()
 	{
-		if ( BulletOwner.IsValid() || GameState == GameState.WaitingForPlayers ) return;
+		// So that a player who is AFK/trolling can't hog the bullet forever
+		if ( BulletOwner.IsValid() && timeSinceBulletReroll < 20f ) return;
+		if ( GameState == GameState.WaitingForPlayers ) return;
+
+		timeSinceBulletReroll = 0f;
+
+		// Normally this is set in RerollBullet, but we need to
+		// do this here too if we want to take a bullet away forcefully
+		if ( BulletOwner.IsValid() )
+			prevBulletOwner = BulletOwner;
 
 		var eligible = All.OfType<Player>().Where( p => p != prevBulletOwner && p.LifeState == LifeState.Alive );
 
