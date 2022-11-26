@@ -14,7 +14,7 @@
   "CodePath": "/code/",
   "RootNamespace": null,
   "Metadata": {
-    "MaxPlayers": 6,
+    "MaxPlayers": 10,
     "MinPlayers": 2,
     "GameNetworkType": "Multiplayer",
     "MapSelect": "Unrestricted",
@@ -63,6 +63,11 @@
     },
     "ControlModes": {
       "Keyboard": true
-    }
+    },
+    "DefaultLeaderboards": null,
+    "Summary": "Russian roulette but it\u0027s a shooter",
+    "Description": "",
+    "ReplaceTags": "shooter",
+    "Public": true
   }
 }

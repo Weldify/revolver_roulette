@@ -31,6 +31,8 @@ public partial class Player : Sandbox.Player
 		{
 			TryBeginSpectating( specPlayer.EyePosition, true );
 		}
+
+		MakeInvisible();
 	}
 
 	public override void Respawn()
@@ -73,8 +75,7 @@ public partial class Player : Sandbox.Player
 		BecomeRagdollOnClient( To.Everyone, lastDamage.Force, lastDamage.BoneIndex );
 		CameraMode = new SpectateRagdollCamera();
 
-		EnableDrawing = false;
-		EnableAllCollisions = false;
+		MakeInvisible();
 
 		base.OnKilled();
 	}
@@ -88,6 +89,12 @@ public partial class Player : Sandbox.Player
 
 		var controller = GetActiveController();
 		controller?.Simulate( cl, this, GetActiveAnimator() );
+	}
+
+	public void MakeInvisible()
+	{
+		EnableDrawing = false;
+		EnableAllCollisions = false;
 	}
 
 	[Event.Tick.Client]
