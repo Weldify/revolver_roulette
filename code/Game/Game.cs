@@ -24,7 +24,9 @@ public partial class Game : Sandbox.Game
 		Current = this;
 
 		if ( IsClient )
+		{
 			_ = new Hud();
+		}
 	}
 
 	public override void ClientJoined( Client cl )
@@ -61,10 +63,16 @@ public partial class Game : Sandbox.Game
 	}
 
 	[Event.Tick.Server]
-	public void OnTick()
+	public void OnServerTick()
 	{
 		TickState();
 		EnsureBullet();
+	}
+
+	[Event.Tick.Client]
+	public void OnClientTick()
+	{
+		TickMusic();
 	}
 
 	public void OnBulletOwnerChanged( Player _, Player owner )

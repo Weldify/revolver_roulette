@@ -152,8 +152,8 @@
 						_class = "Attachment"
 						name = "muzzle"
 						parent_bone = "gun_grip"
-						relative_origin = [ -0.003483, 42.643345, 40.059387 ]
-						relative_angles = [ -0.000941, -0.000471, -17.674564 ]
+						relative_origin = [ -0.003529, 42.643364, 40.059349 ]
+						relative_angles = [ -70.973297, 93.669632, -92.148933 ]
 						weight = 1.0
 						ignore_rotation = false
 					},

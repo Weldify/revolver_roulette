@@ -12,7 +12,6 @@ internal partial class Revolver : BaseWeapon
 	{
 		base.Spawn();
 
-		Log.Info("Sad");
 		Model = WorldModel;
 	}
 
