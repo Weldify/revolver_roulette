@@ -40,35 +40,37 @@ internal partial class Revolver : BaseWeapon
 	{
 		var plr = Owner as Player; // CanPrimaryAttack ensured this is valid
 
-		if ( !plr.TakeBullet() )
+		if ( Prediction.FirstTime )
 		{
-			DryFire();
-			return;
+			if ( !plr.TakeBullet() )
+			{
+				DryFire();
+				return;
+			}
+
+			var forward = plr.EyeRotation.Forward;
+			foreach ( var tr in TraceBullet( plr.EyePosition, plr.EyePosition + forward * 5000f, 2f ) )
+			{
+				tr.Surface.DoBulletImpact( tr );
+
+				if ( !IsServer ) continue;
+				if ( !tr.Entity.IsValid() ) continue;
+
+				var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 500f, tr.Entity.Health * 2f )
+					.UsingTraceResult( tr )
+					.WithAttacker( plr )
+					.WithWeapon( this );
+
+				tr.Entity.TakeDamage( damageInfo );
+			}
+
+			PlaySound( "revolver.fire" );
+
+			(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
+			ViewModelEntity?.SetAnimParameter( "fire", true );
+
+			ShootEffects();
 		}
-
-		var forward = plr.EyeRotation.Forward;
-
-		foreach ( var tr in TraceBullet( plr.EyePosition, plr.EyePosition + forward * 5000f, 2f ) )
-		{
-			tr.Surface.DoBulletImpact( tr );
-
-			if ( !IsServer ) continue;
-			if ( !tr.Entity.IsValid() ) continue;
-
-			var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 500f, tr.Entity.Health * 2f )
-				.UsingTraceResult( tr )
-				.WithAttacker( plr )
-				.WithWeapon( this );
-
-			tr.Entity.TakeDamage( damageInfo );
-		}
-
-		PlaySound( "revolver.fire" );
-
-		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
-		ViewModelEntity?.SetAnimParameter( "fire", true );
-
-		ShootEffects();
 	}
 
 	public override bool CanSecondaryAttack()
@@ -80,6 +82,7 @@ internal partial class Revolver : BaseWeapon
 
 	public override void AttackSecondary()
 	{
+		if ( !Prediction.FirstTime ) return;
 		// Feign
 		DryFire();
 	}
@@ -101,7 +104,6 @@ internal partial class Revolver : BaseWeapon
 			Owner = Owner,
 			EnableViewmodelRendering = true,
 			Model = ViewModel,
-
 		};
 	}
 }
