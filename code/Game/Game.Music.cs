@@ -26,6 +26,7 @@ public partial class Game
 
 	void RandomizeMusic( string without )
 	{
+		Log.Info( "Randomize" );
 		var names = musicList.Where( s => s != without ).ToList();
 
 		Rand.SetSeed( Time.Tick );
@@ -37,7 +38,10 @@ public partial class Game
 
 	void TickMusic()
 	{
-		var uninitialized = music.Equals( default( Sound ));
+		// Terrorizes me when testing the game
+		if ( Local.Client.IsBot ) return;
+
+		var uninitialized = music.Equals( default( Sound ) );
 		if ( uninitialized || music.Finished )
 			RandomizeMusic( curMusicName );
 
