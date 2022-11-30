@@ -16,8 +16,24 @@ public partial class Game
 
 	private void RespawnPlayers()
 	{
-		foreach ( var plr in Entity.All.OfType<Player>().ToList() )
+		var spawnPoints = All.OfType<SpawnPoint>();
+		var spawnPointCount = spawnPoints.Count();
+
+		var players = All.OfType<Player>();
+
+		for ( int i = 0; i < players.Count(); i++ )
+		{
+			var plr = players.ElementAt( i );
+
+			// Does the map have spawn points? 
+			if ( spawnPointCount > 0 )
+			{
+				var spawnPoint = spawnPoints.ElementAt( i % spawnPointCount );
+				plr.Transform = spawnPoint.Transform;
+			}
+
 			plr.Respawn();
+		}
 	}
 
 	public void TickState()
@@ -56,7 +72,7 @@ public partial class Game
 						GameState = GameState.Intermission;
 						stateTimer = 5f;
 
-						Game.ClientTellWinner( To.Everyone, living.First() );
+						ClientTellWinner( To.Everyone, living.First() );
 
 						continue;
 					}
@@ -68,7 +84,7 @@ public partial class Game
 		}
 	}
 
-	public void OnGameStateChanged(GameState _, GameState state)
+	public void OnGameStateChanged( GameState _, GameState state )
 	{
 		GameStateIndicator.Current.StateChanged();
 	}

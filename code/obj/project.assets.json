@@ -1,10 +1,10 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
+    "net7.0": {
       "base/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v7.0",
         "compile": {
           "bin/placeholder/base.dll": {}
         },
@@ -22,40 +22,36 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
+    "net7.0": [
       "base >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\skale\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\ian\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\users\\skale\\documents\\projects\\revolver_roulette\\code\\revolver_roulette.csproj",
-      "projectName": "revolver_roulette",
-      "projectPath": "c:\\users\\skale\\documents\\projects\\revolver_roulette\\code\\revolver_roulette.csproj",
-      "packagesPath": "C:\\Users\\skale\\.nuget\\packages\\",
-      "outputPath": "c:\\users\\skale\\documents\\projects\\revolver_roulette\\code\\obj\\",
+      "projectUniqueName": "C:\\Users\\ian\\Documents\\Projects\\revolver_roulette\\code\\revroulette.csproj",
+      "projectName": "revroulette",
+      "projectPath": "C:\\Users\\ian\\Documents\\Projects\\revolver_roulette\\code\\revroulette.csproj",
+      "packagesPath": "C:\\Users\\ian\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ian\\Documents\\Projects\\revolver_roulette\\code\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\skale\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\ian\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {}
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "projectReferences": {
             "C:\\Program Files (x86)\\Steam\\steamapps\\common\\sbox\\addons\\base\\code\\base.csproj": {
               "projectPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\sbox\\addons\\base\\code\\base.csproj"
@@ -70,8 +66,8 @@
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net7.0": {
+        "targetAlias": "net7.0",
         "imports": [
           "net461",
           "net462",
