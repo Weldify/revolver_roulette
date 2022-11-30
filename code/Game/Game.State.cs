@@ -25,6 +25,8 @@ public partial class Game
 		{
 			var plr = players.ElementAt( i );
 
+			plr.Respawn();
+
 			// Does the map have spawn points? 
 			if ( spawnPointCount > 0 )
 			{
@@ -32,7 +34,7 @@ public partial class Game
 				plr.Transform = spawnPoint.Transform;
 			}
 
-			plr.Respawn();
+			plr.ResetInterpolation();
 		}
 	}
 

@@ -3,23 +3,15 @@ namespace RevolverRoulette;
 internal partial class Revolver : BaseWeapon
 {
 	public static readonly Model WorldModel = Model.Load( "models/revolver/revolver.vmdl" );
-	public static readonly Model ViewModel = Model.Load("models/revolver/v_revolver.vmdl");
+	public static readonly Model ViewModel = Model.Load( "models/revolver/v_revolver.vmdl" );
 
 	public override bool CanReload() => false;
-	public override bool CanSecondaryAttack() => false;
 
-	public override void Spawn() 
+	public override void Spawn()
 	{
 		base.Spawn();
 
 		Model = WorldModel;
-	}
-
-	public override bool CanPrimaryAttack()
-	{
-		return Input.Pressed( InputButton.PrimaryAttack )
-			&& Owner.IsValid()
-			&& Owner.LifeState == LifeState.Alive;
 	}
 
 	[ClientRpc]
@@ -32,9 +24,16 @@ internal partial class Revolver : BaseWeapon
 
 	private void DryFire()
 	{
-		PlaySound("revolver.dryfire");
+		PlaySound( "revolver.dryfire" );
 		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
 		ViewModelEntity?.SetAnimParameter( "fire", true );
+	}
+
+	public override bool CanPrimaryAttack()
+	{
+		return Input.Pressed( InputButton.PrimaryAttack )
+			&& Owner.IsValid()
+			&& Owner.LifeState == LifeState.Alive;
 	}
 
 	public override void AttackPrimary()
@@ -64,12 +63,25 @@ internal partial class Revolver : BaseWeapon
 			tr.Entity.TakeDamage( damageInfo );
 		}
 
-		PlaySound("revolver.fire");
+		PlaySound( "revolver.fire" );
 
 		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
 		ViewModelEntity?.SetAnimParameter( "fire", true );
-		
+
 		ShootEffects();
+	}
+
+	public override bool CanSecondaryAttack()
+	{
+		return Input.Pressed( InputButton.SecondaryAttack )
+			&& Owner.IsValid()
+			&& Owner.LifeState == LifeState.Alive;
+	}
+
+	public override void AttackSecondary()
+	{
+		// Feign
+		DryFire();
 	}
 
 	public override void SimulateAnimator( PawnAnimator anim )
@@ -85,11 +97,11 @@ internal partial class Revolver : BaseWeapon
 
 		ViewModelEntity = new ViewModel
 		{
-			Position= Position,
+			Position = Position,
 			Owner = Owner,
 			EnableViewmodelRendering = true,
 			Model = ViewModel,
-			
+
 		};
 	}
 }
