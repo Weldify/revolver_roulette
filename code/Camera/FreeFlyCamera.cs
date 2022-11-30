@@ -2,7 +2,10 @@ namespace RevolverRoulette;
 
 internal class FreeFlyCamera : CameraMode
 {
-	public FreeFlyCamera(Vector3 pos)
+	const float DEFAULT_SPEED = 400f;
+	const float FAST_SPEED = 700f;
+
+	public FreeFlyCamera( Vector3 pos )
 	{
 		Position = pos;
 	}
@@ -22,9 +25,12 @@ internal class FreeFlyCamera : CameraMode
 
 		Rotation = pawn.EyeRotation;
 
-		var dir = Rotation.Forward * Input.Forward - Rotation.Right * Input.Left;
+		var up = Convert.ToSingle( Input.Down( InputButton.Jump ) ) - Convert.ToSingle( Input.Down( InputButton.Duck ) );
+		var dir = Rotation.Forward * Input.Forward + Rotation.Right * -Input.Left + Rotation.Up * up;
 
-		var helper = new MoveHelper( Position, dir.Normal * 600f );
+		var speed = Input.Down( InputButton.Run ) ? FAST_SPEED : DEFAULT_SPEED;
+
+		var helper = new MoveHelper( Position, dir.Normal * speed );
 		helper.Trace.Radius( 16f );
 
 		if ( helper.TryMove( Time.Delta ) > 0f )
