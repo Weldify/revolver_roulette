@@ -21,30 +21,6 @@ public partial class Player : Sandbox.Player
 		// Freshly spawned pawns are Alive,
 		// which causes the game to think they're participating in the match.
 		Despawn();
-
-		// Try to start spectating a player
-
-		var validPlayers = All.OfType<Player>().Where( p => p.LifeState == LifeState.Alive );
-		var randPlayer = Rand.FromList( validPlayers.ToList() );
-
-		if ( randPlayer.IsValid() )
-		{
-			TryBeginSpectating( To.Single( Client ), EyePosition, true );
-			return;
-		}
-
-		// Fallback to spawnpoint if no player is found
-
-		var spawnPoints = All.OfType<SpawnPoint>();
-		var randSpawnPoint = Rand.FromList( spawnPoints.ToList() );
-
-		if ( randSpawnPoint.IsValid() )
-		{
-			TryBeginSpectating( To.Single( Client ), EyePosition, true );
-			return;
-		}
-
-		TryBeginSpectating( To.Single( Client ), EyePosition, true );
 	}
 
 	public void Despawn( bool spectate = false )
@@ -54,11 +30,6 @@ public partial class Player : Sandbox.Player
 		LifeState = LifeState.Respawnable;
 
 		SetVisibility( false );
-
-		if ( spectate )
-		{
-			TryBeginSpectating( To.Single( Client ), EyePosition, true );
-		}
 	}
 
 	public override void Respawn()
@@ -104,7 +75,6 @@ public partial class Player : Sandbox.Player
 		Despawn();
 
 		BecomeRagdollOnClient( To.Everyone, lastDamage.Force, lastDamage.BoneIndex );
-		CameraMode = new SpectateRagdollCamera();
 
 		base.OnKilled();
 	}
@@ -124,11 +94,5 @@ public partial class Player : Sandbox.Player
 	{
 		EnableDrawing = visible;
 		EnableAllCollisions = visible;
-	}
-
-	[Event.Tick.Client]
-	public void OnClientTick()
-	{
-		TryBeginSpectating( EyePosition );
 	}
 }

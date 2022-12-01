@@ -2,8 +2,6 @@ namespace RevolverRoulette;
 
 public partial class Player
 {
-	private TimeSince timeSinceRagdolled = 0f;
-
 	[ClientRpc]
 	private void BecomeRagdollOnClient( Vector3 force, int forceBone )
 	{
@@ -55,18 +53,5 @@ public partial class Player
 		corpse.PlaySound( "ragdoll.goofy" );
 
 		Corpse = corpse;
-
-		timeSinceRagdolled = 0f;
-	}
-
-	[ClientRpc]
-	public void TryBeginSpectating( Vector3 pos, bool forced = false )
-	{
-		if ( CameraMode is FreeFlyCamera ) return;
-
-		var canSpectate = LifeState != LifeState.Alive && timeSinceRagdolled > 3f;
-		if ( !forced && !canSpectate ) return;
-
-		CameraMode = new FreeFlyCamera( pos );
 	}
 }
