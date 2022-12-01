@@ -5,17 +5,18 @@ internal class FreeFlyCamera : CameraMode
 	const float DEFAULT_SPEED = 400f;
 	const float FAST_SPEED = 700f;
 
-	public FreeFlyCamera( Vector3 pos )
-	{
-		Position = pos;
-	}
-
 	public override void Activated()
 	{
-		var pawn = Local.Pawn;
-		if ( pawn == null ) return;
+		var plr = Local.Pawn as Player;
+		if ( plr == null ) return;
 
-		Rotation = pawn.EyeRotation;
+		Position = plr.EyePosition;
+		Rotation = Input.Rotation;
+
+		if ( !plr.FirstTimeSpectator ) return;
+		plr.FirstTimeSpectator = false;
+
+		Position = plr.SpectatorOrigin;
 	}
 
 	public override void Update()
@@ -23,19 +24,13 @@ internal class FreeFlyCamera : CameraMode
 		var pawn = Local.Pawn;
 		if ( !pawn.IsValid() ) return;
 
-		Rotation = pawn.EyeRotation;
+		Rotation = Input.Rotation;
 
 		var up = Convert.ToSingle( Input.Down( InputButton.Jump ) ) - Convert.ToSingle( Input.Down( InputButton.Duck ) );
 		var dir = Rotation.Forward * Input.Forward + Rotation.Right * -Input.Left + Rotation.Up * up;
 
 		var speed = Input.Down( InputButton.Run ) ? FAST_SPEED : DEFAULT_SPEED;
 
-		var helper = new MoveHelper( Position, dir.Normal * speed );
-		helper.Trace.Radius( 16f );
-
-		if ( helper.TryMove( Time.Delta ) > 0f )
-		{
-			Position = helper.Position;
-		}
+		Position += dir.Normal * speed * Time.Delta;
 	}
 }

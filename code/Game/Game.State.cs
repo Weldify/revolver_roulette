@@ -38,6 +38,16 @@ public partial class Game
 		}
 	}
 
+	void DespawnPlayers()
+	{
+		var livePlayers = All.OfType<Player>().Where( p => p.LifeState == LifeState.Alive );
+
+		foreach ( var plr in livePlayers )
+		{
+			plr.Despawn( true );
+		}
+	}
+
 	public void TickState()
 	{
 		// STATE MACHINE!???
@@ -48,6 +58,8 @@ public partial class Game
 				case GameState.Intermission:
 					if ( stateTimer < 0f )
 					{
+						DespawnPlayers();
+
 						GameState = GameState.WaitingForPlayers;
 						continue;
 					}
