@@ -10,8 +10,8 @@ internal class FreeFlyCamera : CameraMode
 		var pawn = Local.Pawn;
 		if ( pawn == null ) return;
 
-		Position = pawn.Position;
-		Rotation = pawn.EyeRotation;
+		Position = pawn.EyePosition;
+		Rotation = Input.Rotation;
 	}
 
 	public override void Update()
@@ -19,7 +19,7 @@ internal class FreeFlyCamera : CameraMode
 		var pawn = Local.Pawn;
 		if ( !pawn.IsValid() ) return;
 
-		Rotation = pawn.EyeRotation;
+		Rotation = Input.Rotation;
 
 		var up = Convert.ToSingle( Input.Down( InputButton.Jump ) ) - Convert.ToSingle( Input.Down( InputButton.Duck ) );
 		var dir = Rotation.Forward * Input.Forward + Rotation.Right * -Input.Left + Rotation.Up * up;
