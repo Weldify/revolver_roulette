@@ -5,16 +5,12 @@ internal class FreeFlyCamera : CameraMode
 	const float DEFAULT_SPEED = 400f;
 	const float FAST_SPEED = 700f;
 
-	public FreeFlyCamera( Vector3 pos )
-	{
-		Position = pos;
-	}
-
 	public override void Activated()
 	{
 		var pawn = Local.Pawn;
 		if ( pawn == null ) return;
 
+		Position = pawn.Position;
 		Rotation = pawn.EyeRotation;
 	}
 

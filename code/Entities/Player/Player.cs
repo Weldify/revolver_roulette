@@ -2,6 +2,9 @@ namespace RevolverRoulette;
 
 public partial class Player : Sandbox.Player
 {
+	[Net]
+	public bool IsSpectating { get; set; } = true;
+
 	private DamageInfo lastDamage;
 
 	public Player()
@@ -30,6 +33,8 @@ public partial class Player : Sandbox.Player
 		LifeState = LifeState.Respawnable;
 
 		SetVisibility( false );
+
+		IsSpectating = true;
 	}
 
 	public override void Respawn()
@@ -42,7 +47,6 @@ public partial class Player : Sandbox.Player
 		};
 
 		Animator = new StandardPlayerAnimator();
-		CameraMode = new FirstPersonCamera();
 
 		Inventory.DeleteContents();
 		Inventory.Add( new Revolver(), true );
@@ -55,6 +59,7 @@ public partial class Player : Sandbox.Player
 		base.Respawn();
 
 		SetVisibility( true );
+		IsSpectating = false;
 	}
 
 	public override void TakeDamage( DamageInfo info )
@@ -81,6 +86,8 @@ public partial class Player : Sandbox.Player
 
 	public override void Simulate( Client cl )
 	{
+		ResolveCamera();
+
 		if ( LifeState != LifeState.Alive ) return;
 
 		TickPlayerUse();
@@ -88,6 +95,21 @@ public partial class Player : Sandbox.Player
 
 		var controller = GetActiveController();
 		controller?.Simulate( cl, this, GetActiveAnimator() );
+	}
+
+	void ResolveCamera()
+	{
+		if ( IsSpectating && CameraMode is not FreeFlyCamera )
+		{
+			CameraMode = new FreeFlyCamera();
+			return;
+		}
+
+		if ( !IsSpectating && CameraMode is not FirstPersonCamera )
+		{
+			CameraMode = new FirstPersonCamera();
+			return;
+		}
 	}
 
 	public void SetVisibility( bool visible )
