@@ -26,7 +26,6 @@ public partial class Game
 
 	void RandomizeMusic( string without )
 	{
-		Log.Info( "Randomize" );
 		var names = musicList.Where( s => s != without ).ToList();
 
 		Rand.SetSeed( Time.Tick );

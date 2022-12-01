@@ -12,27 +12,53 @@ public partial class Player : Sandbox.Player
 	public override void Spawn()
 	{
 		base.Spawn();
-	
-		// Freshly spawned pawns are Alive,
-		// which causes the game to think they're participating in the match.
-		LifeState = LifeState.Respawnable;
 
 		SetModel( "models/citizen/citizen.vmdl" );
 
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
 
-		var activePlayers = All.OfType<Player>().Where(
-			p => p.LifeState == LifeState.Alive
-		);
+		// Freshly spawned pawns are Alive,
+		// which causes the game to think they're participating in the match.
+		Despawn();
 
-		var specPlayer = Rand.FromList( activePlayers.ToList() );
-		if ( specPlayer.IsValid() )
+		// Try to start spectating a player
+
+		var validPlayers = All.OfType<Player>().Where( p => p.LifeState == LifeState.Alive );
+		var randPlayer = Rand.FromList( validPlayers.ToList() );
+
+		if ( randPlayer.IsValid() )
 		{
-			TryBeginSpectating( specPlayer.EyePosition, true );
+			TryBeginSpectating( To.Single( Client ), EyePosition, true );
+			return;
 		}
 
-		MakeInvisible();
+		// Fallback to spawnpoint if no player is found
+
+		var spawnPoints = All.OfType<SpawnPoint>();
+		var randSpawnPoint = Rand.FromList( spawnPoints.ToList() );
+
+		if ( randSpawnPoint.IsValid() )
+		{
+			TryBeginSpectating( To.Single( Client ), EyePosition, true );
+			return;
+		}
+
+		TryBeginSpectating( To.Single( Client ), EyePosition, true );
+	}
+
+	public void Despawn( bool spectate = false )
+	{
+		Inventory?.DeleteContents();
+
+		LifeState = LifeState.Respawnable;
+
+		SetVisibility( false );
+
+		if ( spectate )
+		{
+			TryBeginSpectating( To.Single( Client ), EyePosition, true );
+		}
 	}
 
 	public override void Respawn()
@@ -55,10 +81,9 @@ public partial class Player : Sandbox.Player
 		UpdateClothes();
 		Dress();
 
-		EnableDrawing = true;
-		EnableAllCollisions = true;
-
 		base.Respawn();
+
+		SetVisibility( true );
 	}
 
 	public override void TakeDamage( DamageInfo info )
@@ -76,12 +101,10 @@ public partial class Player : Sandbox.Player
 		// or even worse, duplicate it when we spawn in!
 		TakeBullet();
 
-		Inventory.DeleteContents();
+		Despawn();
 
 		BecomeRagdollOnClient( To.Everyone, lastDamage.Force, lastDamage.BoneIndex );
 		CameraMode = new SpectateRagdollCamera();
-
-		MakeInvisible();
 
 		base.OnKilled();
 	}
@@ -97,10 +120,10 @@ public partial class Player : Sandbox.Player
 		controller?.Simulate( cl, this, GetActiveAnimator() );
 	}
 
-	public void MakeInvisible()
+	public void SetVisibility( bool visible )
 	{
-		EnableDrawing = false;
-		EnableAllCollisions = false;
+		EnableDrawing = visible;
+		EnableAllCollisions = visible;
 	}
 
 	[Event.Tick.Client]
