@@ -30,12 +30,6 @@ internal class FreeFlyCamera : CameraMode
 
 		var speed = Input.Down( InputButton.Run ) ? FAST_SPEED : DEFAULT_SPEED;
 
-		var helper = new MoveHelper( Position, dir.Normal * speed );
-		helper.Trace.Radius( 16f );
-
-		if ( helper.TryMove( Time.Delta ) > 0f )
-		{
-			Position = helper.Position;
-		}
+		Position += dir.Normal * speed * Time.Delta;
 	}
 }
