@@ -2,9 +2,6 @@ namespace RevolverRoulette;
 
 public partial class Player : Sandbox.Player
 {
-	[Net]
-	public bool IsSpectating { get; set; } = true;
-
 	private DamageInfo lastDamage;
 
 	public Player()
@@ -86,8 +83,6 @@ public partial class Player : Sandbox.Player
 
 	public override void Simulate( Client cl )
 	{
-		ResolveCamera();
-
 		if ( LifeState != LifeState.Alive ) return;
 
 		TickPlayerUse();
@@ -97,19 +92,10 @@ public partial class Player : Sandbox.Player
 		controller?.Simulate( cl, this, GetActiveAnimator() );
 	}
 
-	void ResolveCamera()
+	[Event.Tick.Client]
+	public void OnClientTick()
 	{
-		if ( IsSpectating && CameraMode is not FreeFlyCamera )
-		{
-			CameraMode = new FreeFlyCamera();
-			return;
-		}
-
-		if ( !IsSpectating && CameraMode is not FirstPersonCamera )
-		{
-			CameraMode = new FirstPersonCamera();
-			return;
-		}
+		ResolveCamera();
 	}
 
 	public void SetVisibility( bool visible )

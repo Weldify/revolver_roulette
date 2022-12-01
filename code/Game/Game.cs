@@ -29,12 +29,25 @@ public partial class Game : Sandbox.Game
 		}
 	}
 
+	public override void Spawn()
+	{
+		base.Spawn();
+
+		foreach ( var spawnPoint in Entity.All.OfType<SpawnPoint>() )
+		{
+			// Client spectators rely on spawn points to position their camera
+			spawnPoint.Transmit = TransmitType.Always;
+		}
+	}
+
 	public override void ClientJoined( Client cl )
 	{
 		base.ClientJoined( cl );
 
 		var plr = new Player();
 		cl.Pawn = plr;
+
+		plr.SpectatorOrigin = GetRandomSpectatorOrigin();
 	}
 
 	public void RerollBullet()
@@ -84,5 +97,20 @@ public partial class Game : Sandbox.Game
 	public static void ClientTellWinner( Player plr )
 	{
 		WinnerPrompt.Current?.PlayerWon( plr );
+	}
+
+	// Where to put the spectator camera
+	// The first time they join the game
+	Vector3 GetRandomSpectatorOrigin()
+	{
+		var spawnPoints = All.OfType<SpawnPoint>();
+		if ( spawnPoints.Count() < 1 )
+			return Vector3.Zero;
+
+		var randSpawn = spawnPoints
+			.OrderBy( x => Guid.NewGuid() )
+			.First();
+
+		return randSpawn.Position + Vector3.Up * 80f;
 	}
 }

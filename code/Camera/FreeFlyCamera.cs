@@ -7,11 +7,16 @@ internal class FreeFlyCamera : CameraMode
 
 	public override void Activated()
 	{
-		var pawn = Local.Pawn;
-		if ( pawn == null ) return;
+		var plr = Local.Pawn as Player;
+		if ( plr == null ) return;
 
-		Position = pawn.EyePosition;
+		Position = plr.EyePosition;
 		Rotation = Input.Rotation;
+
+		if ( !plr.FirstTimeSpectator ) return;
+		plr.FirstTimeSpectator = false;
+
+		Position = plr.SpectatorOrigin;
 	}
 
 	public override void Update()
