@@ -41,12 +41,12 @@ public partial class Player
 			clothing.SetParent( corpse, true );
 		}
 
-		corpse.PhysicsGroup?.AddVelocity( force * 2f );
+		corpse.PhysicsGroup?.AddVelocity( force * 10f );
 
 		if ( forceBone >= 0 )
 		{
 			var bone = corpse.GetBonePhysicsBody( forceBone );
-			bone?.ApplyForce( force * 1000f );
+			bone?.ApplyForce( force * 300f );
 		}
 		//? Currently the sound isn't the same for different clients.
 		//? Will fix once it's possible to influence which subsound is played.

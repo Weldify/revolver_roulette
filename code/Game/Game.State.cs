@@ -78,9 +78,8 @@ public partial class Game
 
 					break;
 				case GameState.Ongoing:
-					var living = Entity.All.OfType<Player>().Where(
-						p => p.LifeState == LifeState.Alive
-					);
+					var living = Entity.All.OfType<Player>()
+						.Where( p => p.LifeState == LifeState.Alive );
 
 					if ( living.Count() <= 1 )
 					{
