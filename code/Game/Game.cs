@@ -29,17 +29,6 @@ public partial class Game : Sandbox.Game
 		}
 	}
 
-	public override void Spawn()
-	{
-		base.Spawn();
-
-		foreach ( var spawnPoint in Entity.All.OfType<SpawnPoint>() )
-		{
-			// Client spectators rely on spawn points to position their camera
-			spawnPoint.Transmit = TransmitType.Always;
-		}
-	}
-
 	public override void ClientJoined( Client cl )
 	{
 		base.ClientJoined( cl );
