@@ -16,7 +16,9 @@ public partial class Game
 
 	private void RespawnPlayers()
 	{
-		var spawnPoints = All.OfType<SpawnPoint>();
+		var spawnPoints = All.OfType<SpawnPoint>()
+			.OrderBy( x => Guid.NewGuid() );
+
 		var spawnPointCount = spawnPoints.Count();
 
 		var players = All.OfType<Player>();
@@ -28,11 +30,10 @@ public partial class Game
 			plr.Respawn();
 
 			// Does the map have spawn points? 
-			if ( spawnPointCount > 0 )
-			{
-				var spawnPoint = spawnPoints.ElementAt( i % spawnPointCount );
-				plr.Transform = spawnPoint.Transform;
-			}
+			if ( spawnPointCount < 1 ) continue;
+
+			var spawnPoint = spawnPoints.ElementAt( i % spawnPointCount );
+			plr.Transform = spawnPoint.Transform;
 
 			plr.ResetInterpolation();
 		}
