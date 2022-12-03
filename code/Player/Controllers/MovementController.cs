@@ -25,9 +25,12 @@ public partial class MovementController : BasePlayerController
 	public bool Swimming { get; set; } = false;
 	[Net] public bool AutoJump { get; set; } = false;
 
+	[Net, Predicted, Local] public bool CanDive { get; set; } = false;
+	[Net, Predicted, Local] public bool IsDiving { get; set; } = false;
+	[Net, Predicted, Local] public TimeSince TimeSinceDive { get; set; } = float.MaxValue;
+
 	public Duck Duck;
 	public Unstuck Unstuck;
-
 
 	public MovementController()
 	{
@@ -99,34 +102,12 @@ public partial class MovementController : BasePlayerController
 
 		RestoreGroundPos();
 
-		//Velocity += BaseVelocity * ( 1 + Time.Delta * 0.5f );
-		//BaseVelocity = Vector3.Zero;
-
-		//Rot = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
-
 		if ( Unstuck.TestAndFix() )
 			return;
-
-		// Check Stuck
-		// Unstuck - or return if stuck
-
-		// Set Ground Entity to null if  falling faster then 250
-
-		// store water level to compare later
-
-		// if not on ground, store fall velocity
-
-		// player->UpdateStepSound( player->m_pSurfaceData, mv->GetAbsOrigin(), mv->m_vecVelocity )
-
-
-		// RunLadderMode
 
 		CheckLadder();
 		Swimming = Pawn.WaterLevel > 0.6f;
 
-		//
-		// Start Gravity
-		//
 		if ( !Swimming && !IsTouchingLadder )
 		{
 			Velocity -= new Vector3( 0, 0, Gravity * 0.5f ) * Time.Delta;
@@ -135,45 +116,44 @@ public partial class MovementController : BasePlayerController
 			BaseVelocity = BaseVelocity.WithZ( 0 );
 		}
 
-
-		/*
-		 if (player->m_flWaterJumpTime)
-			{
-				WaterJump();
-				TryPlayerMove();
-				// See if we are still in water?
-				CheckWater();
-				return;
-			}
-		*/
-
-		// if ( underwater ) do underwater movement
-
 		if ( AutoJump ? Input.Down( InputButton.Jump ) : Input.Pressed( InputButton.Jump ) )
 		{
 			CheckJumpButton();
 		}
 
-		// Fricion is handled before we add in any base velocity. That way, if we are on a conveyor,
-		//  we don't slow when standing still, relative to the conveyor.
+		if ( GroundEntity != null )
+			CanDive = true;
+
+		if ( Input.Pressed( InputButton.Run ) )
+			TryDive();
+
+		if ( IsDiving && GroundEntity == null )
+			TimeSinceDive = 0f;
+
+		if ( IsDiving )
+		{
+			SetTag( "diving" );
+
+			if ( GroundEntity == null )
+				TimeSinceDive = 0f;
+
+			// Landed after a dive
+			if ( TimeSinceDive > 1f )
+			{
+				IsDiving = false;
+			}
+		}
+
 		bool bStartOnGround = GroundEntity != null;
-		//bool bDropSound = false;
 		if ( bStartOnGround )
 		{
-			//if ( Velocity.z < FallSoundZ ) bDropSound = true;
-
 			Velocity = Velocity.WithZ( 0 );
-			//player->m_Local.m_flFallVelocity = 0.0f;
-
 			if ( GroundEntity != null )
 			{
 				ApplyFriction( GroundFriction * SurfaceFriction );
 			}
 		}
 
-		//
-		// Work out wish velocity.. just take input, rotate it to view, clamp to -1, 1
-		//
 		WishVelocity = new Vector3( Input.Forward, Input.Left, 0 );
 		var inSpeed = WishVelocity.Length.Clamp( 0, 1 );
 		WishVelocity *= Input.Rotation.Angles().WithPitch( 0 ).ToRotation();
@@ -217,16 +197,10 @@ public partial class MovementController : BasePlayerController
 			Velocity -= new Vector3( 0, 0, Gravity * 0.5f ) * Time.Delta;
 		}
 
-
 		if ( GroundEntity != null )
 		{
 			Velocity = Velocity.WithZ( 0 );
 		}
-
-		// CheckFalling(); // fall damage etc
-
-		// Land Sound
-		// Swim Sounds
 
 		SaveGroundPos();
 
@@ -246,7 +220,6 @@ public partial class MovementController : BasePlayerController
 			DebugOverlay.ScreenText( $"    WishVelocity: {WishVelocity}", lineOffset + 5 );
 			DebugOverlay.ScreenText( $"    Speed: {Velocity.Length}", lineOffset + 6 );
 		}
-
 	}
 
 	public virtual float GetWishSpeed()
@@ -412,37 +385,10 @@ public partial class MovementController : BasePlayerController
 
 	public virtual void CheckJumpButton()
 	{
-		//if ( !player->CanJump() )
-		//    return false;
-
-
-		/*
-		if ( player->m_flWaterJumpTime )
-		{
-			player->m_flWaterJumpTime -= gpGlobals->frametime();
-			if ( player->m_flWaterJumpTime < 0 )
-				player->m_flWaterJumpTime = 0;
-
-			return false;
-		}*/
-
-
-
-		// If we are in the water most of the way...
 		if ( Swimming )
 		{
-			// swimming, not jumping
 			ClearGroundEntity();
-
 			Velocity = Velocity.WithZ( 100 );
-
-			// play swimming sound
-			//  if ( player->m_flSwimSoundTime <= 0 )
-			{
-				// Don't play sound again for 1 second
-				//   player->m_flSwimSoundTime = 1000;
-				//   PlaySwimSound();
-			}
 
 			return;
 		}
@@ -450,48 +396,39 @@ public partial class MovementController : BasePlayerController
 		if ( GroundEntity == null )
 			return;
 
-		/*
-		if ( player->m_Local.m_bDucking && (player->GetFlags() & FL_DUCKING) )
-			return false;
-		*/
-
-		/*
-		// Still updating the eye position.
-		if ( player->m_Local.m_nDuckJumpTimeMsecs > 0u )
-			return false;
-		*/
-
 		ClearGroundEntity();
 
-		// player->PlayStepSound( (Vector &)mv->GetAbsOrigin(), player->m_pSurfaceData, 1.0, true );
-
-		// MoveHelper()->PlayerSetAnimation( PLAYER_JUMP );
-
 		float flGroundFactor = 1.0f;
-		//if ( player->m_pSurfaceData )
-		{
-			//   flGroundFactor = g_pPhysicsQuery->GetGameSurfaceproperties( player->m_pSurfaceData )->m_flJumpFactor;
-		}
-
 		float flMul = 268.3281572999747f * 1.2f;
-
 		float startz = Velocity.z;
 
 		if ( Duck.IsActive )
 			flMul *= 0.8f;
 
 		Velocity = Velocity.WithZ( startz + flMul * flGroundFactor );
-
 		Velocity -= new Vector3( 0, 0, Gravity * 0.5f ) * Time.Delta;
 
-		// mv->m_outJumpVel.z += mv->m_vecVelocity[2] - startz;
-		// mv->m_outStepHeight += 0.15f;
-
-		// don't jump again until released
-		//mv->m_nOldButtons |= IN_JUMP;
-
 		AddEvent( "jump" );
+	}
 
+	public void TryDive()
+	{
+		if ( !Prediction.FirstTime ) return;
+
+		if ( !CanDive || TimeSinceDive < 1.5f ) return;
+		CanDive = false;
+		IsDiving = true;
+
+		ClearGroundEntity();
+
+		var wishDir = new Vector3( Input.Forward, Input.Left, 0f ).Normal;
+		wishDir = (wishDir * Input.Rotation).WithZ( 0f ).Normal;
+
+		var diveDir = wishDir + Vector3.Up * 0.5f;
+
+		Velocity = diveDir * 500f;
+
+		Pawn.PlaySound( "dive.grunt" );
 	}
 
 	public virtual void AirMove()

@@ -43,7 +43,7 @@ public partial class Player : Sandbox.Player
 			DefaultSpeed = 200f,
 		};
 
-		Animator = new StandardPlayerAnimator();
+		Animator = new PlayerAnimator();
 
 		Inventory.DeleteContents();
 		Inventory.Add( new Revolver(), true );
