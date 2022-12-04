@@ -42,8 +42,10 @@ public partial class Game
 		if ( Local.Client.IsBot ) return;
 
 		if ( !musicInitialized || music.Finished )
+		{
 			musicInitialized = true;
 			RandomizeMusic( curMusicName );
+		}
 
 		music.SetVolume( MusicVolume );
 	}
