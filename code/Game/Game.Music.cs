@@ -14,9 +14,6 @@ public partial class Game
 		}
 	}
 
-	Sound music;
-	string curMusicName;
-
 	readonly List<string> musicList = new()
 	{
 		"music.digital_gunslinger",
@@ -24,29 +21,31 @@ public partial class Game
 		"music.three_kinds_of_suns",
 	};
 
-	void RandomizeMusic( string without )
+	Sound music;
+	string lastMusicName;
+
+	void SwitchMusic()
 	{
-		var names = musicList.Where( s => s != without ).ToList();
+		var names = musicList.Where( s => s != lastMusicName ).ToList();
 
 		Rand.SetSeed( Time.Tick );
 		var name = Rand.FromList( names );
 
 		music = Sound.FromScreen( name );
-		curMusicName = name;
+		lastMusicName = name;
+
+		musicFinished = false;
 	}
 
-	bool musicInitialized = false;
+	bool musicFinished = true;
 	void TickMusic()
 	{
-		// Terrorizes me when testing the game
-		if ( Local.Client.IsBot ) return;
-
-		if ( !musicInitialized || music.Finished )
-		{
-			musicInitialized = true;
-			RandomizeMusic( curMusicName );
-		}
+		if ( musicFinished )
+			SwitchMusic();
 
 		music.SetVolume( MusicVolume );
+
+		if ( music.Finished && music.ElapsedTime > 1f )
+			musicFinished = true;
 	}
 }
