@@ -13,7 +13,7 @@ public class Duck : BaseNetworkable
 
 	public virtual void PreTick()
 	{
-		bool forced = Controller.IsDiving || Controller.TimeSinceDive < 1f;
+		bool forced = Controller.IsDiving;
 		bool wants = forced || Input.Down( InputButton.Duck );
 
 		if ( wants != IsActive )

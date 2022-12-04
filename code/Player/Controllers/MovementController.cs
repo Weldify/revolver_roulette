@@ -385,6 +385,9 @@ public partial class MovementController : BasePlayerController
 
 	public virtual void CheckJumpButton()
 	{
+		if ( IsDiving )
+			return;
+
 		if ( Swimming )
 		{
 			ClearGroundEntity();

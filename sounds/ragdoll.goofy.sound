@@ -11,12 +11,13 @@
 		Sounds = 
 		[
 			resource:"sounds/ragdoll.goofy.carhorn.vsnd",
-			resource:"sounds/chimonaugh.vsnd",
+			"sounds/chimonaugh.vsnd",
 			resource:"sounds/ragdoll.goofy.mario.vsnd",
 			resource:"sounds/ragdoll.goofy.oof.vsnd",
 			resource:"sounds/ragdoll.goofy.skull.vsnd",
 			resource:"sounds/ragdoll.goofy.snore.vsnd",
 			resource:"sounds/ragdoll.goofy.spotify.vsnd",
+			resource:"sounds/ragdoll.goofy.chimonaugh.vsnd",
 		]
 		SelectionMode = "Random"
 		MaximumDistance = 5841.2856
