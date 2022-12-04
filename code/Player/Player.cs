@@ -36,14 +36,14 @@ public partial class Player : Sandbox.Player
 
 	public override void Respawn()
 	{
-		Controller = new WalkController
+		Controller = new MovementController
 		{
 			SprintSpeed = 200f,
 			WalkSpeed = 150f,
 			DefaultSpeed = 200f,
 		};
 
-		Animator = new StandardPlayerAnimator();
+		Animator = new PlayerAnimator();
 
 		Inventory.DeleteContents();
 		Inventory.Add( new Revolver(), true );

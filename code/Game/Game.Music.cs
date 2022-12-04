@@ -35,13 +35,13 @@ public partial class Game
 		curMusicName = name;
 	}
 
+	bool musicInitialized = false;
 	void TickMusic()
 	{
 		// Terrorizes me when testing the game
 		if ( Local.Client.IsBot ) return;
 
-		var uninitialized = music.Equals( default( Sound ) );
-		if ( uninitialized || music.Finished )
+		if ( !musicInitialized || music.Finished )
 			RandomizeMusic( curMusicName );
 
 		music.SetVolume( MusicVolume );
