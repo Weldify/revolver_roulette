@@ -8,10 +8,9 @@ internal class FreeFlyCamera : CameraMode
 	public override void Activated()
 	{
 		var plr = Local.Pawn as Player;
-		if ( plr == null ) return;
 
 		Position = plr.EyePosition;
-		Rotation = Input.Rotation;
+		Rotation = plr.ViewAngles.ToRotation();
 
 		if ( !plr.FirstTimeSpectator ) return;
 		plr.FirstTimeSpectator = false;
@@ -21,13 +20,14 @@ internal class FreeFlyCamera : CameraMode
 
 	public override void Update()
 	{
-		var pawn = Local.Pawn;
-		if ( !pawn.IsValid() ) return;
+		var plr = Local.Pawn as Player;
 
-		Rotation = Input.Rotation;
+		Rotation = plr.ViewAngles.ToRotation();
 
 		var up = Convert.ToSingle( Input.Down( InputButton.Jump ) ) - Convert.ToSingle( Input.Down( InputButton.Duck ) );
-		var dir = Rotation.Forward * Input.Forward + Rotation.Right * -Input.Left + Rotation.Up * up;
+
+		var dir = new Vector3( plr.InputDirection.x.Clamp( -1f, 1f ), plr.InputDirection.y.Clamp( -1f, 1f ), up ).Normal;
+		dir *= Rotation;
 
 		var speed = Input.Down( InputButton.Run ) ? FAST_SPEED : DEFAULT_SPEED;
 

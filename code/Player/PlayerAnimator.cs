@@ -8,8 +8,8 @@ public class PlayerAnimator : PawnAnimator
 
 	public override void Simulate()
 	{
-		var player = Pawn as Player;
-		var idealRotation = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
+		var plr = Pawn as Player;
+		var idealRotation = Rotation.LookAt( plr.ViewAngles.Forward.WithZ( 0 ), Vector3.Up );
 
 		DoRotation( idealRotation );
 		DoWalk();
@@ -30,7 +30,7 @@ public class PlayerAnimator : PawnAnimator
 			SetAnimParameter( "voice", Client.TimeSinceLastVoice < 0.5f ? Client.VoiceLevel : 0.0f );
 		}
 
-		Vector3 aimPos = Pawn.EyePosition + Input.Rotation.Forward * 200;
+		Vector3 aimPos = Pawn.EyePosition + plr.ViewAngles.Forward * 200;
 		Vector3 lookPos = aimPos;
 
 		//
@@ -48,7 +48,7 @@ public class PlayerAnimator : PawnAnimator
 		var skid = HasTag( "diving" ) ? 1f : 0f;
 		SetAnimParameter( "skid", skid );
 
-		if ( player != null && player.ActiveChild is BaseCarriable carry )
+		if ( plr != null && plr.ActiveChild is BaseCarriable carry )
 		{
 			carry.SimulateAnimator( this );
 		}

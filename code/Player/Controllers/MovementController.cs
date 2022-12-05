@@ -89,16 +89,18 @@ public partial class MovementController : BasePlayerController
 	{
 		base.FrameSimulate();
 
-		EyeRotation = Input.Rotation;
+		var pl = Pawn as Player;
+		EyeRotation = pl.ViewAngles.ToRotation();
 	}
 
 	public override void Simulate()
 	{
+		var plr = Pawn as Player;
+
 		EyeLocalPosition = Vector3.Up * (EyeHeight * Pawn.Scale);
 		UpdateBBox();
 
 		EyeLocalPosition += TraceOffset;
-		EyeRotation = Input.Rotation;
 
 		RestoreGroundPos();
 
@@ -154,9 +156,9 @@ public partial class MovementController : BasePlayerController
 			}
 		}
 
-		WishVelocity = new Vector3( Input.Forward, Input.Left, 0 );
+		WishVelocity = new Vector3( plr.InputDirection.x.Clamp( -1f, 1f ), plr.InputDirection.y.Clamp( -1f, 1f ), 0 );
 		var inSpeed = WishVelocity.Length.Clamp( 0, 1 );
-		WishVelocity *= Input.Rotation.Angles().WithPitch( 0 ).ToRotation();
+		WishVelocity *= plr.ViewAngles.WithPitch( 0 ).ToRotation();
 
 		if ( !Swimming && !IsTouchingLadder )
 		{
@@ -422,13 +424,14 @@ public partial class MovementController : BasePlayerController
 		CanDive = false;
 		IsDiving = true;
 
+		var plr = Pawn as Player;
+
 		ClearGroundEntity();
 
-		var wishDir = new Vector3( Input.Forward, Input.Left, 0f ).Normal;
-		wishDir = (wishDir * Input.Rotation).WithZ( 0f ).Normal;
+		var wishDir = new Vector3( plr.InputDirection.x.Clamp( -1f, 1f ), plr.InputDirection.y.Clamp( -1f, 1f ), 0 ).Normal;
+		wishDir = (wishDir * plr.ViewAngles.ToRotation()).WithZ( 0f ).Normal;
 
 		var diveDir = wishDir + Vector3.Up * 0.5f;
-
 		Velocity = diveDir * 500f;
 
 		Pawn.PlaySound( "dive.grunt" );
@@ -469,8 +472,10 @@ public partial class MovementController : BasePlayerController
 
 	public virtual void CheckLadder()
 	{
-		var wishvel = new Vector3( Input.Forward, Input.Left, 0 );
-		wishvel *= Input.Rotation.Angles().WithPitch( 0 ).ToRotation();
+		var plr = Pawn as Player;
+
+		var wishvel = new Vector3( plr.InputDirection.x.Clamp( -1f, 1f ), plr.InputDirection.y.Clamp( -1f, 1f ), 0 );
+		wishvel *= plr.ViewAngles.WithPitch( 0 ).ToRotation();
 		wishvel = wishvel.Normal;
 
 		if ( IsTouchingLadder )
