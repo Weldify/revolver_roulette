@@ -8,7 +8,7 @@ global using RevolverRoulette.UI;
 
 namespace RevolverRoulette;
 
-public partial class Game : Sandbox.Game
+public partial class Game : GameManager
 {
 	new public static Game Current { get; private set; }
 
@@ -27,8 +27,8 @@ public partial class Game : Sandbox.Game
 		{
 			_ = new Hud();
 		}
-	}
-
+	} 
+	 
 	public override void ClientJoined( Client cl )
 	{
 		base.ClientJoined( cl );

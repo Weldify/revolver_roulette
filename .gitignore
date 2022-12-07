@@ -1,6 +1,25 @@
-# Auto generated (i think)
-.editorconfig
-/code/obj
-/code/Properties
+# editor/ide stuff
+*/.vs/*
+*/.vscode/*
+*.swp
 
-changelog.txt
+# auto-generated
+*/*.csproj
+_bakeresourcecache/*
+code/Properties/*
+code/obj/*
+.codegen/*
+.intermediate/*
+*/tools_asset_info.bin
+*/tools_thumbnail_cache.bin
+*/omnisharp.json
+
+*_bakeresourcecache.vpk
+*.los
+
+*.rar
+*.zip
+
+# compiled valve resource formats
+*.*_c
+*.vpk
