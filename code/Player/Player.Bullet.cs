@@ -4,14 +4,14 @@ public partial class Player
 {
 	public bool HasBullet
     {
-        get => Game.Current.BulletOwner == this;
+        get => GameManager.Current.BulletOwner == this;
     }
 
 	public bool TakeBullet()
 	{
 		if ( HasBullet )
 		{
-			Game.Current.RerollBullet();
+			GameManager.Current.RerollBullet();
 			return true;
 		}
 

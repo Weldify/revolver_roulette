@@ -1,6 +1,6 @@
 namespace RevolverRoulette;
 
-public partial class Game
+public partial class GameManager
 {
 	static float musicVolume = 0.1f;
 
@@ -28,8 +28,8 @@ public partial class Game
 	{
 		var names = musicList.Where( s => s != lastMusicName ).ToList();
 
-		Rand.SetSeed( Time.Tick );
-		var name = Rand.FromList( names );
+		Game.SetRandomSeed(Time.Tick);
+		var name = Game.Random.FromList( names );
 
 		music = Sound.FromScreen( name );
 		lastMusicName = name;

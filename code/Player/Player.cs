@@ -1,6 +1,6 @@
 namespace RevolverRoulette;
 
-public partial class Player : Sandbox.Player
+public partial class Player : SandboxPlayer
 {
 	private DamageInfo lastDamage;
 
@@ -43,8 +43,6 @@ public partial class Player : Sandbox.Player
 			DefaultSpeed = 200f,
 		};
 
-		Animator = new PlayerAnimator();
-
 		Inventory.DeleteContents();
 		Inventory.Add( new Revolver(), true );
 
@@ -81,21 +79,27 @@ public partial class Player : Sandbox.Player
 		base.OnKilled();
 	}
 
-	public override void Simulate( Client cl )
+	public override void Simulate( IClient cl )
 	{
 		if ( LifeState != LifeState.Alive ) return;
 
 		TickPlayerUse();
+		DoPlayerAnimation();
 		SimulateActiveChild( cl, ActiveChild );
 
 		var controller = GetActiveController();
-		controller?.Simulate( cl, this, GetActiveAnimator() );
+		controller?.Simulate( cl, this );
 	}
 
 	[Event.Tick.Client]
 	public void OnClientTick()
 	{
 		ResolveCamera();
+	}
+
+	public override void FrameSimulate( IClient cl )
+	{
+		UpdateCamera();
 	}
 
 	public void SetVisibility( bool visible )

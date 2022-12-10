@@ -1,36 +1,45 @@
 namespace RevolverRoulette;
 
-internal class FreeFlyCamera : CameraMode
+public interface ICameraMode
 {
-	const float DEFAULT_SPEED = 400f;
-	const float FAST_SPEED = 700f;
+	public void Activated();
+	public void Update();
+}
 
-	public override void Activated()
+internal class FreeFlyCamera : ICameraMode
+{
+	const float DefaultSpeed = 400f;
+	const float FastSpeed = 700f;
+
+	public void Activated()
 	{
-		var plr = Local.Pawn as Player;
+		var plr = Game.LocalPawn as Player;
 
-		Position = plr.EyePosition;
-		Rotation = plr.ViewAngles.ToRotation();
+		var pos = plr.EyePosition;
+		var rot = plr.ViewAngles.ToRotation();
 
 		if ( !plr.FirstTimeSpectator ) return;
 		plr.FirstTimeSpectator = false;
 
-		Position = plr.SpectatorOrigin;
+		Camera.Position = pos;
+		Camera.Rotation = rot;
+		Camera.FirstPersonViewer = plr;
 	}
 
-	public override void Update()
+	public void Update()
 	{
-		var plr = Local.Pawn as Player;
+		var plr = Game.LocalPawn as Player;
 
-		Rotation = plr.ViewAngles.ToRotation();
-
+		var rot = plr.ViewAngles.ToRotation();
+		
 		var up = Convert.ToSingle( Input.Down( InputButton.Jump ) ) - Convert.ToSingle( Input.Down( InputButton.Duck ) );
 
 		var dir = new Vector3( plr.InputDirection.x.Clamp( -1f, 1f ), plr.InputDirection.y.Clamp( -1f, 1f ), up ).Normal;
-		dir *= Rotation;
+		dir *= rot;
 
-		var speed = Input.Down( InputButton.Run ) ? FAST_SPEED : DEFAULT_SPEED;
+		var speed = Input.Down( InputButton.Run ) ? FastSpeed : DefaultSpeed;
 
-		Position += dir.Normal * speed * Time.Delta;
+		Camera.Position += dir.Normal * speed * Time.Delta;
+		Camera.Rotation = rot;
 	}
 }

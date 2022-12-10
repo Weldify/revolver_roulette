@@ -8,18 +8,17 @@ global using RevolverRoulette.UI;
 
 namespace RevolverRoulette;
 
-public partial class Game : GameManager
+public partial class GameManager : Sandbox.GameManager
 {
-	new public static Game Current { get; private set; }
+	public new static GameManager Current { get; private set; }
 
-	[Net, Change]
-	public Player BulletOwner { get; private set; }
+	[Net, Change] public Player BulletOwner { get; private set; }
 
 	private Player prevBulletOwner;
 
 	private TimeSince timeSinceBulletReroll;
 
-	public Game()
+	public GameManager()
 	{
 		Current = this;
 
@@ -27,9 +26,9 @@ public partial class Game : GameManager
 		{
 			_ = new Hud();
 		}
-	} 
-	 
-	public override void ClientJoined( Client cl )
+	}
+
+	public override void ClientJoined( IClient cl )
 	{
 		base.ClientJoined( cl );
 
@@ -60,8 +59,8 @@ public partial class Game : GameManager
 
 		var eligible = All.OfType<Player>().Where( p => p != prevBulletOwner && p.LifeState == LifeState.Alive );
 
-		Rand.SetSeed( Time.Tick );
-		BulletOwner = Rand.FromList( eligible.ToList() );
+		Game.SetRandomSeed( Time.Tick );
+		BulletOwner = Game.Random.FromList( eligible.ToList() );
 	}
 
 	[Event.Tick.Server]

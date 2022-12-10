@@ -19,7 +19,6 @@ public partial class Player
 		if ( !IsSpectating && CameraMode is not FirstPersonCamera )
 		{
 			CameraMode = new FirstPersonCamera();
-			return;
 		}
 	}
 }

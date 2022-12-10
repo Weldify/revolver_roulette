@@ -17,7 +17,7 @@ internal partial class Revolver : BaseWeapon
 	[ClientRpc]
 	protected virtual void ShootEffects()
 	{
-		Host.AssertClient();
+		Game.AssertClient();
 
 		Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
 	}
@@ -25,15 +25,15 @@ internal partial class Revolver : BaseWeapon
 	private void DryFire()
 	{
 		PlaySound( "revolver.dryfire" );
-		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
+		(Owner as AnimatedEntity)?.SetAnimParameter( "b_attack", true );
 		ViewModelEntity?.SetAnimParameter( "fire", true );
 	}
 
 	public override bool CanPrimaryAttack()
 	{
 		return Input.Pressed( InputButton.PrimaryAttack )
-			&& Owner.IsValid()
-			&& Owner.LifeState == LifeState.Alive;
+		       && Owner.IsValid()
+		       && Owner.LifeState == LifeState.Alive;
 	}
 
 	public override void AttackPrimary()
@@ -47,9 +47,9 @@ internal partial class Revolver : BaseWeapon
 				DryFire();
 				return;
 			}
-
-			var forward = plr.EyeRotation.Forward;
-			foreach ( var tr in TraceBullet( plr.EyePosition, plr.EyePosition + forward * 5000f, 2f ) )
+			
+			var forward = plr.ViewAngles.Forward;
+			foreach ( var tr in TraceBullet( plr.AimRay.Position, plr.AimRay.Position + forward * 5000f, 2f ) )
 			{
 				tr.Surface.DoBulletImpact( tr );
 
@@ -66,7 +66,7 @@ internal partial class Revolver : BaseWeapon
 
 			PlaySound( "revolver.fire" );
 
-			(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
+			(Owner as AnimatedEntity)?.SetAnimParameter( "b_attack", true );
 			ViewModelEntity?.SetAnimParameter( "fire", true );
 
 			ShootEffects();
@@ -76,8 +76,8 @@ internal partial class Revolver : BaseWeapon
 	public override bool CanSecondaryAttack()
 	{
 		return Input.Pressed( InputButton.SecondaryAttack )
-			&& Owner.IsValid()
-			&& Owner.LifeState == LifeState.Alive;
+		       && Owner.IsValid()
+		       && Owner.LifeState == LifeState.Alive;
 	}
 
 	public override void AttackSecondary()
@@ -87,23 +87,20 @@ internal partial class Revolver : BaseWeapon
 		DryFire();
 	}
 
-	public override void SimulateAnimator( PawnAnimator anim )
+	public override void SimulateAnimator( CitizenAnimationHelper anim )
 	{
-		anim.SetAnimParameter( "holdtype", (int)CitizenAnimationHelper.HoldTypes.Pistol );
-		anim.SetAnimParameter( "aim_body_weight", 1.0f );
-		anim.SetAnimParameter( "holdtype_handedness", (int)CitizenAnimationHelper.Hand.Right );
+		anim.HoldType = CitizenAnimationHelper.HoldTypes.Pistol;
+		anim.Handedness = CitizenAnimationHelper.Hand.Right;
+		anim.AimBodyWeight = 1.0f;
 	}
 
 	public override void CreateViewModel()
 	{
-		Host.AssertClient();
+		Game.AssertClient();
 
 		ViewModelEntity = new ViewModel
 		{
-			Position = Position,
-			Owner = Owner,
-			EnableViewmodelRendering = true,
-			Model = ViewModel,
+			Position = Position, Owner = Owner, EnableViewmodelRendering = true, Model = ViewModel,
 		};
 	}
 }

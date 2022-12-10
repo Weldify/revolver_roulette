@@ -3,16 +3,14 @@
 	data = 
 	{
 		UI = false
-		Volume = 1
-		VolumeRandom = 0
-		Pitch = 1
-		PitchRandom = 0.02
+		Volume = "1.00,1.00,0"
+		Pitch = "0.99,1.03,1"
 		Decibels = 165
+		SelectionMode = "Random"
 		Sounds = 
 		[
 			resource:"sounds/revolver.fire.vsnd",
 		]
-		SelectionMode = "Random"
 		MaximumDistance = 6210.039
 		MinimumDistance = 310.50195
 	}

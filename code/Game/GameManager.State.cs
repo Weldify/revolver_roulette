@@ -7,7 +7,7 @@ public enum GameState
 	Intermission,
 }
 
-public partial class Game
+public partial class GameManager
 {
 	[Net, Change]
 	public GameState GameState { get; set; } = GameState.WaitingForPlayers;

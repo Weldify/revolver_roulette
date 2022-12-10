@@ -6,7 +6,7 @@ public partial class GameStateIndicator
 
 	private static string FormattedGameState
 	{
-		get => Game.Current.GameState switch
+		get => GameManager.Current.GameState switch
 		{
 			GameState.WaitingForPlayers => "Waiting for players",
 			GameState.Intermission => "Intermission",
@@ -26,6 +26,6 @@ public partial class GameStateIndicator
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine( Game.Current.GameState );
+		return HashCode.Combine( GameManager.Current.GameState );
 	}
 }
