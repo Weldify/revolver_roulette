@@ -22,7 +22,7 @@ public partial class GameManager : Sandbox.GameManager
 	{
 		Current = this;
 
-		if ( IsClient )
+		if ( Game.IsClient )
 		{
 			_ = new Hud();
 		}

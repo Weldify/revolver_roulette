@@ -9,7 +9,7 @@ public partial class Player
 		if ( LifeState != LifeState.Alive )
 			return;
 
-		if ( !IsClient )
+		if ( !Game.IsClient )
 			return;
 
 		if ( timeSinceLastFootstep < 0.15f )

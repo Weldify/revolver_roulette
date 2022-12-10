@@ -53,7 +53,7 @@ internal partial class Revolver : BaseWeapon
 			{
 				tr.Surface.DoBulletImpact( tr );
 
-				if ( !IsServer ) continue;
+				if ( !Game.IsServer ) continue;
 				if ( !tr.Entity.IsValid() ) continue;
 
 				var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 500f, tr.Entity.Health * 2f )

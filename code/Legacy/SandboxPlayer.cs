@@ -71,7 +71,7 @@ public partial class SandboxPlayer : AnimatedEntity
 
 		if ( LifeState == LifeState.Dead )
 		{
-			if ( timeSinceDied > 3 && IsServer )
+			if ( timeSinceDied > 3 && Game.IsServer )
 			{
 				Respawn();
 			}
@@ -208,7 +208,7 @@ public partial class SandboxPlayer : AnimatedEntity
 		if ( LifeState != LifeState.Alive )
 			return;
 
-		if ( !IsClient )
+		if ( !Game.IsClient )
 			return;
 
 		if ( timeSinceLastFootstep < 0.2f )
@@ -242,7 +242,7 @@ public partial class SandboxPlayer : AnimatedEntity
 
 	public override void StartTouch( Entity other )
 	{
-		if ( IsClient ) return;
+		if ( Game.IsClient ) return;
 
 		if ( other is PickupTrigger )
 		{
