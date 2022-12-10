@@ -120,7 +120,6 @@ public partial class BaseWeapon : BaseCarriable
 
 		var tr = trace.Run();
 		
-		DebugOverlay.TraceResult(tr);
 		if ( tr.Hit )
 			yield return tr;
 
